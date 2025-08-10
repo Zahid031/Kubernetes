@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-lite
+  labels:
+    app: test-lite
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: test-lite
+  template:
+    metadata:
+      labels:
+        app: test-lite
+    spec:
+      containers:
+        - name: busybox-container
+          image: busybox:latest
+          command: ["sh", "-c", "echo Hello from BusyBox; sleep 3600"]
+        - name: alpine-container
+          image: alpine:latest
+          command: ["sh", "-c", "echo Hello from Alpine; sleep 3600"]
+
+
