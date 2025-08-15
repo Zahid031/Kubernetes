@@ -31,3 +31,7 @@ Rollback using helm:
 helm rollback deployment_name 1 -n namespace
 helm get secrets
 if we uninstall and keep secrets then we can reinstall using rollback to a specific revision
+
+if we want success message after all pod up then use wait
+
+helm install my-mysql bitnami/mysql --version 14.0.2 --wait --timeout 5m
