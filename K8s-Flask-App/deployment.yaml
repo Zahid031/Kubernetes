@@ -17,7 +17,10 @@ spec:
         image: zahid03/flask-app:latest
         ports:
         - containerPort: 5000
+
 ---
+
+
 apiVersion: v1
 kind: Service
 metadata:
