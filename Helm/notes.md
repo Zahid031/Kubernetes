@@ -35,3 +35,25 @@ if we uninstall and keep secrets then we can reinstall using rollback to a speci
 if we want success message after all pod up then use wait
 
 helm install my-mysql bitnami/mysql --version 14.0.2 --wait --timeout 5m
+helm upgrade my-mysql bitnami/mysql --version 14.0.2 --atomic //we should use this as it will rollback if anytything fails
+
+
+helm create my_first_chart
+chart.yml: contain metadata of the applciation
+charts:
+templates;
+value.ymlfile
+
+to package a chart:
+helm package chart_name  if i provide -u flag than it will download the latest pacckage then package it
+for specifi location i can use helm package chart_name -d /root/
+
+helm lint my-first-chart // to validate the chart
+
+
+Helm template:
+actions: curly brackets {{}} are the actions which executes in runtime
+
+nindent 4 mean new line with 4 indent
+
+helm template ,lint show syntax error and --dry-run show object also
