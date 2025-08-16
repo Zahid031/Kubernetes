@@ -57,3 +57,9 @@ actions: curly brackets {{}} are the actions which executes in runtime
 nindent 4 mean new line with 4 indent
 
 helm template ,lint show syntax error and --dry-run show object also
+
+helm dependency update my-first-chart
+
+condition dependency to control which should installed or not
+
+we can pass our custom value in dependency
