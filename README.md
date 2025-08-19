@@ -71,7 +71,7 @@ helm install ingress-nginx ingress-nginx/ingress-nginx \
 kubectl apply -f 00-namespace.yaml
 kubectl apply -f 01-secrets.yaml
 kubectl apply -f 02-configmaps.yaml
-kubectl apply -f 03-postgres.yaml
+kubectl apply -f 03-postgress.yaml
 kubectl apply -f 04-rabbitmq.yaml
 
 # Wait for database and message queue
@@ -80,7 +80,7 @@ kubectl wait --for=condition=ready pod -l app=rabbitmq -n todo-ingress --timeout
 
 # Deploy services
 kubectl apply -f 05-user-service.yaml
-kubectl apply -f 06-task-service.yaml
+kubectl apply -f 06-tasks-service.yaml
 kubectl apply -f 07-frontend.yaml
 
 # Wait for services to be ready
