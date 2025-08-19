@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: todo-ingress
+data:
+  DEBUG: "1"
+  ALLOWED_HOSTS: "localhost,127.0.0.1,user-service,frontend,todo-app.local,*"
+  CORS_ALLOWED_ORIGINS: "http://localhost:3000,http://localhost:80,http://frontend,http://todo-app.local,https://todo-app.local"
+  USER_SERVICE_PORT: "8000"
+  TASK_SERVICE_PORT: "8001"
+  # Updated to use ingress URLs instead of NodePort
+  VITE_API_USERS: "http://todo-app.local/api/users"
+  VITE_API_TASKS: "http://todo-app.local/api/tasks"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rabbitmq-config
+  namespace: todo-ingress
+data:
+  rabbitmq.conf: |
+    heartbeat = 30
+    consumer_timeout = 3600000
+    handshake_timeout = 10000
+    vm_memory_high_watermark.relative = 0.6
+    disk_free_limit.relative = 2.0
+    collect_statistics_interval = 5000
+  enabled_plugins: |
+    [rabbitmq_management,rabbitmq_prometheus].
