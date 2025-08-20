@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: todo_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  task-service:
+    build: .
+    ports:
+      - "8001:8001"
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres123@postgres:5432/todo_db?sslmode=disable"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
