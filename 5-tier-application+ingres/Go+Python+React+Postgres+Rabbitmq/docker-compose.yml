@@ -1,0 +1,105 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: todo_rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+    ports:
+      - "5672:5672"      # AMQP port
+      - "15672:15672"    # Management UI port
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    networks:
+      - todo-network
+
+  postgres:
+    image: postgres:15
+    container_name: todo_postgres
+    environment:
+      POSTGRES_DB: todo_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    networks:
+      - todo-network
+
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    container_name: todo_user_service
+    environment:
+      - DEBUG=1
+      - DATABASE_URL=postgresql://postgres:postgres123@postgres:5432/todo_db
+      - ALLOWED_HOSTS=localhost,127.0.0.1,user-service
+      - CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:80,http://frontend
+      - RABBITMQ_URL=amqp://admin:admin123@rabbitmq:5672/
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - todo-network
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+
+  task-service:
+    build:
+      context: ./task-service
+      dockerfile: Dockerfile
+    container_name: todo_task_service
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres123@postgres:5432/todo_db?sslmode=disable
+      - PORT=8001
+      - USER_SERVICE_URL=http://user-service:8000
+      - RABBITMQ_URL=amqp://admin:admin123@rabbitmq:5672/
+    ports:
+      - "8001:8001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      user-service:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - todo-network
+
+  frontend:
+    build:
+      context: ./todo-frontend
+      dockerfile: Dockerfile
+    container_name: todo_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - user-service
+      - task-service
+    networks:
+      - todo-network
+
+networks:
+  todo-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  rabbitmq_data:

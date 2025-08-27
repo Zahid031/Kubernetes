@@ -2,6 +2,13 @@ apiVersion: v2
 name: my-first-chart
 description: A Helm chart for Kubernetes
 
+<<<<<<< HEAD
+=======
+maintainers:
+  - name: Zahid Hasan
+    email: zahid.s.dev@gmail.com
+
+>>>>>>> e5c5ef9fa040a13ed7c5b6dff7847aa24651dc3b
 # A chart can be either an 'application' or a 'library' chart.
 #
 # Application charts are a collection of templates that can be packaged into versioned archives
@@ -22,3 +29,14 @@ version: 0.1.0
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
 appVersion: "1.16.0"
+<<<<<<< HEAD
+=======
+
+dependencies:
+  - name: mysql
+    version: 8.0.0
+    repository: https://charts.bitnami.com/bitnami
+    condition: mysql.enabled
+    tags:
+      - database
+>>>>>>> e5c5ef9fa040a13ed7c5b6dff7847aa24651dc3b
