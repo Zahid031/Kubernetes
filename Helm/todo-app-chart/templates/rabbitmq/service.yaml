@@ -1,0 +1,21 @@
+{{- if .Values.rabbitmq.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "todo-app.fullname" . }}-rabbitmq
+  namespace: {{ include "todo-app.namespace" . }}
+  labels:
+    {{- include "todo-app.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rabbitmq
+spec:
+  selector:
+    {{- include "todo-app.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: rabbitmq
+  ports:
+  - name: amqp
+    port: {{ .Values.rabbitmq.service.ports.amqp }}
+    targetPort: 5672
+  - name: mgmt
+    port: {{ .Values.rabbitmq.service.ports.management }}
+    targetPort: 15672
+{{- end }}
