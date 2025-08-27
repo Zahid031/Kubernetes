@@ -1,5 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
+<<<<<<< HEAD
 
   {{ .Values.customblock.author.name | nindent 4 }}
   {{ .Values.customblock.author.address | nindent 6 }}
@@ -18,6 +19,8 @@ kind: Deployment
   {{end}}
   
 
+=======
+>>>>>>> e5c5ef9fa040a13ed7c5b6dff7847aa24651dc3b
 metadata:
   name: {{ include "my-first-chart.fullname" . }}
   labels:

@@ -1,0 +1,6 @@
+auth:
+  database: maria_db
+  password: test123
+  rootPassword: test321
+  username: zahid
+

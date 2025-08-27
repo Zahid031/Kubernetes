@@ -3,6 +3,7 @@
 # Declare variables to be passed into your templates.
 
 # This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+<<<<<<< HEAD
 customblock:
   author:
     name: "zahid"
@@ -11,6 +12,8 @@ customblock:
 
 
 
+=======
+>>>>>>> e5c5ef9fa040a13ed7c5b6dff7847aa24651dc3b
 replicaCount: 1
 
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
@@ -60,7 +63,11 @@ securityContext: {}
 # This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
 service:
   # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
+<<<<<<< HEAD
   type: NodePort
+=======
+  type: ClusterIP
+>>>>>>> e5c5ef9fa040a13ed7c5b6dff7847aa24651dc3b
   # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
   port: 80
 
@@ -105,8 +112,13 @@ readinessProbe:
 
 # This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
 autoscaling:
+<<<<<<< HEAD
   enabled: true
   minReplicas: 2
+=======
+  enabled: false
+  minReplicas: 1
+>>>>>>> e5c5ef9fa040a13ed7c5b6dff7847aa24651dc3b
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
