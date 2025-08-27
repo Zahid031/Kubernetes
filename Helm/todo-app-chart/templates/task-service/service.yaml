@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "todo-app.fullname" . }}-task-service
+  namespace: {{ include "todo-app.namespace" . }}
+  labels:
+    {{- include "todo-app.labels" . | nindent 4 }}
+    app.kubernetes.io/component: task-service
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "todo-app.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: task-service
+  ports:
+  - port: {{ .Values.taskService.service.port }}
+    targetPort: 8001
+    protocol: TCP
+    name: http

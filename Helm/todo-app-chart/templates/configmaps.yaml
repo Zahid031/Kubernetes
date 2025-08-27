@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: {{ include "todo-app.namespace" . }}
+  labels:
+    {{- include "todo-app.labels" . | nindent 4 }}
+data:
+  DEBUG: {{ .Values.appConfig.debug | quote }}
+  ALLOWED_HOSTS: {{ .Values.appConfig.allowedHosts | quote }}
+  CORS_ALLOWED_ORIGINS: {{ .Values.appConfig.corsAllowedOrigins | quote }}
+  USER_SERVICE_PORT: {{ .Values.appConfig.userServicePort | quote }}
+  TASK_SERVICE_PORT: {{ .Values.appConfig.taskServicePort | quote }}
+  VITE_API_USERS: {{ .Values.appConfig.viteApiUsers | quote }}
+  VITE_API_TASKS: {{ .Values.appConfig.viteApiTasks | quote }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rabbitmq-config
+  namespace: {{ include "todo-app.namespace" . }}
+  labels:
+    {{- include "todo-app.labels" . | nindent 4 }}
+data:
+  rabbitmq.conf: |
+    {{ .Values.rabbitmq.configuration | nindent 4 }}
+  enabled_plugins: |
+    {{ .Values.rabbitmq.plugins | nindent 4 }}

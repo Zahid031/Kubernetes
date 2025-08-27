@@ -1,0 +1,40 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "todo-app.fullname" . }}-ingress
+  namespace: {{ include "todo-app.namespace" . }}
+  annotations:
+    {{- range $key, $value := .Values.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  labels:
+    {{- include "todo-app.labels" . | nindent 4 }}
+spec:
+  ingressClassName: {{ .Values.global.ingress.className | default "nginx" }}
+  rules:
+  - host: {{ .Values.global.ingress.host | default "todo-app.local" }}
+    http:
+      paths:
+      - path: /api/users
+        pathType: Prefix
+        backend:
+          service:
+            name: user-service
+            port:
+              number: {{ .Values.userService.service.port }}
+      - path: /api/tasks
+        pathType: Prefix
+        backend:
+          service:
+            name: task-service
+            port:
+              number: {{ .Values.taskService.service.port }}
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend
+            port:
+              number: {{ .Values.frontend.service.port }}
+{{- end }}

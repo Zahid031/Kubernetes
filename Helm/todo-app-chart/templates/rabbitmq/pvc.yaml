@@ -1,0 +1,16 @@
+{{- if .Values.rabbitmq.enabled -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "todo-app.fullname" . }}-rabbitmq-pvc
+  namespace: {{ include "todo-app.namespace" . }}
+  labels:
+    {{- include "todo-app.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rabbitmq
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: {{ .Values.rabbitmq.persistence.storageClass }}
+  resources:
+    requests:
+      storage: {{ .Values.rabbitmq.persistence.size }}
+{{- end }}

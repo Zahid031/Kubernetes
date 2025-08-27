@@ -1,0 +1,119 @@
+global:
+  namespace: todo-ingress
+  ingress:
+    host: todo-app.local
+    className: nginx
+
+namespace:
+  create: true
+  name: todo-ingress
+  labels:
+    name: todo-ingress
+
+postgresql:
+  enabled: true
+  image:
+    repository: postgres
+    tag: 15
+    pullPolicy: IfNotPresent
+  auth:
+    database: todo_db
+    username: postgres
+    password: postgres123
+    existingSecret: ""
+  persistence:
+    enabled: true
+    storageClass: nfs-client
+    size: 5Gi
+  service:
+    port: 5432
+
+rabbitmq:
+  enabled: true
+  image:
+    repository: rabbitmq
+    tag: 3-management
+    pullPolicy: IfNotPresent
+  auth:
+    username: admin
+    password: admin123
+    existingSecret: ""
+  persistence:
+    enabled: true
+    storageClass: nfs-client
+    size: 2Gi
+  service:
+    ports:
+      amqp: 5672
+      management: 15672
+  configuration: |
+    heartbeat = 30
+    consumer_timeout = 3600000
+    handshake_timeout = 10000
+    vm_memory_high_watermark.relative = 0.6
+    disk_free_limit.relative = 2.0
+    collect_statistics_interval = 5000
+  plugins: "[rabbitmq_management,rabbitmq_prometheus]"
+
+# User service configuration
+userService:
+  image:
+    repository: zahid03/todo-user-service
+    tag: latest
+    pullPolicy: Always
+  replicaCount: 1
+  service:
+    port: 8000
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "200m"
+
+# Task service configuration
+taskService:
+  image:
+    repository: zahid03/todo-task-service
+    tag: latest
+    pullPolicy: Always
+  replicaCount: 1
+  service:
+    port: 8001
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "200m"
+
+# Frontend configuration
+frontend:
+  image:
+    repository: zahid03/todo-frontend-ingress
+    tag: v2
+    pullPolicy: Always
+  replicaCount: 1
+  service:
+    port: 80
+
+# Application configuration
+appConfig:
+  debug: "1"
+  allowedHosts: "localhost,127.0.0.1,user-service,frontend,todo-app.local,*"
+  corsAllowedOrigins: "http://localhost:3000,http://localhost:80,http://frontend,http://todo-app.local,https://todo-app.local"
+  userServicePort: "8000"
+  taskServicePort: "8001"
+  viteApiUsers: "http://todo-app.local/api/users"
+  viteApiTasks: "http://todo-app.local/api/tasks"
+
+# Ingress configuration
+ingress:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
