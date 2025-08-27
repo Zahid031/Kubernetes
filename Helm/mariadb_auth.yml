@@ -1,0 +1,5 @@
+auth:
+  database: "helm"
+  password: "test123"
+  username: "zahid"
+  rootPassword: "roottest123"
