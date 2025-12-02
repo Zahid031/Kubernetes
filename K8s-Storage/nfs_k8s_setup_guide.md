@@ -38,6 +38,8 @@ sudo systemctl restart nfs-kernel-server
 
 # Verify exports
 sudo exportfs -v
+
+helm install nfs-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner --set nfs.server=192.168.56.10 --set nfs.path=/srv/nfs/k8s-data --set storageClass.name=nfs-client --namespace storage-provisioners --create-namespace
 ```
 
 ### Step 3: Configure Firewall
