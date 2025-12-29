@@ -39,11 +39,13 @@ ports:
 providers:
   kubernetesGateway:
     enabled: true
-    gateway:
-      className: traefik
+api:
+  dashboard: true
+  insecure: true
 
 gateway:
   enabled: false
+
 ```
 
 **Configuration breakdown:**
